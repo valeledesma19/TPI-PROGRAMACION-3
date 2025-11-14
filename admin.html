@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin - Academia</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Panel de Administración</h1>
+    <nav id="menu"></nav>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Crear / Editar curso</h2>
+      <form id="formCourse">
+        <input id="courseId" type="hidden">
+        <label for="nombreCurso">Nombre</label>
+        <input id="nombreCurso" type="text" required>
+
+        <label for="descripcionCurso">Descripción</label>
+        <textarea id="descripcionCurso" rows="2"></textarea>
+
+        <label for="duracionCurso">Duración</label>
+        <input id="duracionCurso" type="text">
+
+        <label for="cuposCurso">Cupos</label>
+        <input id="cuposCurso" type="number" min="0">
+
+        <div class="form-row">
+          <button class="btn" type="submit">Guardar</button>
+          <button class="btn secondary" id="btnNuevo" type="button">Nuevo</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card" style="margin-top:1rem">
+      <h2>Inscripciones</h2>
+      <div id="inscriptionsList" class="cursos-grid"></div>
+    </section>
+
+    <section class="card" style="margin-top:1rem">
+      <h2>Dashboard de estados</h2>
+      <canvas id="estadoChart" class="grafico"></canvas>
+    </section>
+  </main>
+
+  <footer>Proyecto TPI — Programación III</footer>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

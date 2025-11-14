@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Academia - Iniciar sesión</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Academia Online</h1>
+    <nav id="menu"></nav>
+  </header>
+
+  <main>
+    <section class="card center">
+      <h2>Iniciar sesión</h2>
+      <form id="formLogin">
+        <label for="email">Email</label>
+        <input id="email" type="email" required>
+
+        <label for="password">Contraseña</label>
+        <input id="password" type="password" minlength="4" required>
+
+        <button class="btn" type="submit">Entrar</button>
+      </form>
+      <p class="muted">¿No tenés cuenta? <a href="registro.html">Registrate</a></p>
+    </section>
+  </main>
+
+  <footer>Proyecto TPI — Programación III</footer>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/login.js"></script>
+</body>
+</html>
