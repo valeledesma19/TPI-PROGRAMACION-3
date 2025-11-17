@@ -1,4 +1,3 @@
-
 const BASE_URL = "https://amock.io/api/valeledesma";
 
 const handleRes = async res => {

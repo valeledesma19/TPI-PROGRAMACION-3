@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Registro</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Registrarse</h1>
+    <nav id="menu"></nav>
+  </header>
+
+  <main>
+    <section class="card center">
+      <h2>Crear cuenta</h2>
+      <form id="formRegister">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" type="text" required>
+
+        <label for="emailReg">Email</label>
+        <input id="emailReg" type="email" required>
+
+        <label for="passwordReg">Contraseña</label>
+        <input id="passwordReg" type="password" minlength="4" required>
+
+        <button class="btn" type="submit">Registrarse</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>Proyecto TPI — Programación III</footer>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/login.js"></script>
+</body>
+</html>
