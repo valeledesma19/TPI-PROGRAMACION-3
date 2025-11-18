@@ -7,7 +7,8 @@ if (usuario.role !== "ADMIN") { alert("Acceso no autorizado"); window.location.h
 const form = document.getElementById("formCourse");
 const btnNuevo = document.getElementById("btnNuevo");
 const inscriptionsDiv = document.getElementById("inscriptionsList");
-const chartCanvas = document.getElementById("estadoChart").getContext("2d");
+const chartCanvasEl = document.getElementById("estadoChart");
+const chartCanvas = chartCanvasEl ? chartCanvasEl.getContext("2d") : null;
 
 let currentChart = null;
 
@@ -15,19 +16,21 @@ const limpiarForm = () => form.reset();
 
 const cargarCursosParaEdicion = async () => {
   try {
-    const cursos = await apiGet("courses");
-    
-    return cursos;
-  } catch (err) { console.error(err); return []; }
+    return await apiGet("courses");
+  } catch {
+    return [];
+  }
 };
 
 form.addEventListener("submit", async e => {
   e.preventDefault();
+
   const id = document.getElementById("courseId").value;
   const nombre = document.getElementById("nombreCurso").value.trim();
   const descripcion = document.getElementById("descripcionCurso").value.trim();
   const duracion = document.getElementById("duracionCurso").value.trim();
   const cupos = Number(document.getElementById("cuposCurso").value) || 0;
+
   try {
     if (id) {
       await apiPut("courses", id, { nombre, descripcion, duracion, cupos });
@@ -37,9 +40,12 @@ form.addEventListener("submit", async e => {
       alert("Curso creado");
     }
     limpiarForm();
-    cargarInscripciones();
-    cargarDashboard();
-  } catch (err) { console.error(err); alert("Error al guardar curso"); }
+    await cargarInscripciones();
+    await cargarDashboard();
+  } catch (err) {
+    console.error(err);
+    alert("Error al guardar curso");
+  }
 });
 
 btnNuevo.addEventListener("click", () => form.reset());
@@ -47,34 +53,50 @@ btnNuevo.addEventListener("click", () => form.reset());
 const crearCardInscription = (ins, cursos, usuarios) => {
   const card = document.createElement("div");
   card.className = "card";
+
   const curso = cursos.find(c => c.id == ins.courseId) || {};
   const user = usuarios.find(u => u.id == ins.userId) || {};
+
   card.innerHTML = `
     <h3>${user.nombre || "Usuario"}</h3>
     <p><strong>Curso:</strong> ${curso.nombre || "-"}</p>
     <p><strong>Estado:</strong> ${ins.estado}</p>
   `;
+
   if (ins.estado === "pendiente") {
     const btnA = document.createElement("button");
     btnA.className = "btn";
     btnA.textContent = "Aprobar";
+
     btnA.onclick = async () => {
       try {
-        await apiPut("enrollments", ins.id, { userId: ins.userId, courseId: ins.courseId, estado: "aprobado" });
-        cargarInscripciones(); cargarDashboard();
-      } catch (err) { console.error(err); alert("Error al aprobar"); }
+        await apiPut("enrollments", ins.id, { ...ins, estado: "aprobado" });
+        await cargarInscripciones();
+        await cargarDashboard();
+      } catch (err) {
+        console.error(err);
+        alert("Error al aprobar");
+      }
     };
+
     const btnR = document.createElement("button");
     btnR.className = "btn secondary";
     btnR.textContent = "Rechazar";
+
     btnR.onclick = async () => {
       try {
-        await apiPut("enrollments", ins.id, { userId: ins.userId, courseId: ins.courseId, estado: "rechazado" });
-        cargarInscripciones(); cargarDashboard();
-      } catch (err) { console.error(err); alert("Error al rechazar"); }
+        await apiPut("enrollments", ins.id, { ...ins, estado: "rechazado" });
+        await cargarInscripciones();
+        await cargarDashboard();
+      } catch (err) {
+        console.error(err);
+        alert("Error al rechazar");
+      }
     };
+
     card.append(btnA, btnR);
   }
+
   return card;
 };
 
@@ -85,30 +107,52 @@ export const cargarInscripciones = async () => {
       apiGet("courses"),
       apiGet("users")
     ]);
-    inscriptionsList.innerHTML = "";
-    inscriptions.forEach(i => inscriptionsList.appendChild(crearCardInscription(i, courses, users)));
+
+    inscriptionsDiv.innerHTML = "";
+    inscriptions.forEach(i =>
+      inscriptionsDiv.appendChild(crearCardInscription(i, courses, users))
+    );
+
   } catch (err) {
-    console.error(err); inscriptionsList.innerHTML = "<p>Error al cargar inscripciones.</p>";
+    console.error(err);
+    if (inscriptionsDiv) inscriptionsDiv.innerHTML = "<p>Error al cargar inscripciones.</p>";
   }
 };
 
 export const cargarDashboard = async () => {
   try {
     const ins = await apiGet("enrollments");
-    const resumen = ins.reduce((acc, cur) => { acc[cur.estado] = (acc[cur.estado] || 0)+1; return acc; }, {});
-    const labels = ["Pendiente","Aprobado","Rechazado"];
-    const data = [resumen.pendiente||0, resumen.aprobado||0, resumen.rechazado||0];
+
+    const resumen = ins.reduce((acc, cur) => {
+      acc[cur.estado] = (acc[cur.estado] || 0) + 1;
+      return acc;
+    }, {});
+
+    if (!chartCanvas) return;
+
     if (currentChart) currentChart.destroy();
+
     currentChart = new Chart(chartCanvas, {
       type: "pie",
-      data: { labels, datasets: [{ data, backgroundColor: ["#f59e0b","#10b981","#ef4444"] }] },
-      options: { responsive:true }
+      data: {
+        labels: ["Pendiente", "Aprobado", "Rechazado"],
+        datasets: [{
+          data: [
+            resumen.pendiente || 0,
+            resumen.aprobado || 0,
+            resumen.rechazado || 0
+          ],
+          backgroundColor: ["#f59e0b", "#10b981", "#ef4444"]
+        }]
+      },
+      options: { responsive: true }
     });
-  } catch (err) { console.error(err); }
+  } catch (err) {
+    console.error(err);
+  }
 };
 
-// inicializar admin
-(async function initAdmin(){
+(async function init() {
   await cargarCursosParaEdicion();
   await cargarInscripciones();
   await cargarDashboard();

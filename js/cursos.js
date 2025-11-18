@@ -1,3 +1,4 @@
+
 import { apiGet, apiPost } from "./api.js";
 
 const usuario = JSON.parse(localStorage.getItem("usuario"));
@@ -29,8 +30,9 @@ const crearCardCurso = (c) => {
         estado: "pendiente"
       });
       alert("Solicitud enviada");
-      cargarMisCursos();
+      await cargarMisCursos();
     } catch (err) {
+      console.error(err);
       alert("Error al inscribirse");
     }
   };
@@ -51,26 +53,39 @@ const crearCardInscripcion = (ins, curso) => {
   return card;
 };
 
-const cargarCursos = async () => {
-  const cursos = await apiGet("courses");
-  cursosList.innerHTML = "";
-  cursos.forEach(c => cursosList.appendChild(crearCardCurso(c)));
+export const cargarCursos = async () => {
+  try {
+    const cursos = await apiGet("courses");
+    if (cursosList) {
+      cursosList.innerHTML = "";
+      cursos.forEach(c => cursosList.appendChild(crearCardCurso(c)));
+    }
+  } catch (err) {
+    console.error(err);
+    if (cursosList) cursosList.innerHTML = "<p>Error al cargar cursos.</p>";
+  }
 };
 
-const cargarMisCursos = async () => {
-  const [ins, cursos] = await Promise.all([
-    apiGet("enrollments"),
-    apiGet("courses")
-  ]);
+export const cargarMisCursos = async () => {
+  try {
+    const [ins, cursos] = await Promise.all([
+      apiGet("enrollments"),
+      apiGet("courses")
+    ]);
 
-  const mias = ins.filter(i => i.userId == usuario.id);
+    const mias = ins.filter(i => i.userId == usuario.id);
 
-  misCursosList.innerHTML = "";
-
-  mias.forEach(i => {
-    const curso = cursos.find(c => c.id == i.courseId);
-    misCursosList.appendChild(crearCardInscripcion(i, curso));
-  });
+    if (misCursosList) {
+      misCursosList.innerHTML = "";
+      mias.forEach(i => {
+        const curso = cursos.find(c => c.id == i.courseId);
+        misCursosList.appendChild(crearCardInscripcion(i, curso));
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    if (misCursosList) misCursosList.innerHTML = "<p>Error al cargar tus cursos.</p>";
+  }
 };
 
 (async function init() {
