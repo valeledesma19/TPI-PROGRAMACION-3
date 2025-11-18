@@ -1,4 +1,3 @@
-
 const menu = document.getElementById("menu");
 const usuario = JSON.parse(localStorage.getItem("usuario"));
 

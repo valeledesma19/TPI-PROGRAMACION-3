@@ -1,4 +1,3 @@
-
 import { apiGet } from "./api.js";
 
 const usuario = JSON.parse(localStorage.getItem("usuario"));

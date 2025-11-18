@@ -1,4 +1,3 @@
-
 const BASE_A = "https://691b234b2d8d78557571af8e.mockapi.io";
 
 
