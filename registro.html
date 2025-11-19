@@ -3,31 +3,39 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Registro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Crear Cuenta</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <header>
-    <h1>Registrarse</h1>
-    <nav id="menu"></nav>
-  </header>
 
-  <main>
-    <section class="card center">
+  <div class="background">
+    <div class="gradient-circle"></div>
+    <div class="gradient-circle2"></div>
+  </div>
+
+  <main class="container">
+    <section class="register-card">
       <h2>Crear cuenta</h2>
+
       <form id="formRegister">
-        <label for="nombre">Nombre</label>
-        <input id="nombre" type="text" required>
+        <div class="input-group">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" type="text" required>
+        </div>
 
-        <label for="emailReg">Email</label>
-        <input id="emailReg" type="email" required>
+        <div class="input-group">
+          <label for="emailReg">Email</label>
+          <input id="emailReg" type="email" required>
+        </div>
 
-        <label for="passwordReg">Contraseña</label>
-        <input id="passwordReg" type="password" minlength="4" required>
+        <div class="input-group">
+          <label for="passwordReg">Contraseña</label>
+          <input id="passwordReg" type="password" minlength="4" required>
+        </div>
 
-        <button class="btn" type="submit">Registrarse</button>
+        <button class="btn-primary" type="submit">Registrarse</button>
       </form>
     </section>
   </main>
@@ -36,7 +44,7 @@
 
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/login.js"></script>
-  
+
 </body>
 
 </html>
