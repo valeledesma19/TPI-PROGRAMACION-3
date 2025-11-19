@@ -6,6 +6,8 @@ if (!usuario) { alert("Inicia sesión"); window.location.href = "index.html"; }
 const cursosList = document.getElementById("cursosList");
 const misCursosList = document.getElementById("misCursosList");
 
+/* La función crearCardCurso() crea dinámicamente una tarjeta para cada curso, agregando un botón para inscribirse.
+Cuando el usuario hace clic, se envía una inscripción mediante apiPost hacia la colección enrollments. */
 const crearCardCurso = (c) => {
   const card = document.createElement("div");
   card.className = "card";
@@ -40,6 +42,8 @@ const crearCardCurso = (c) => {
   return card;
 };
 
+/* crearCardInscripcion() que renderiza cómo va el estado
+de cada curso, en el que el usuario está inscripto. */
 const crearCardInscripcion = (ins, curso) => {
   const card = document.createElement("div");
   card.className = "card";
@@ -52,6 +56,8 @@ const crearCardInscripcion = (ins, curso) => {
   return card;
 };
 
+/* cargarCursos() y cargarMisCursos() consumen datos de MockAPI con apiGet, 
+y actualizan la interfaz usando DOM manipulation. */
 export const cargarCursos = async () => {
   try {
     const cursos = await apiGet("courses");
@@ -87,6 +93,7 @@ export const cargarMisCursos = async () => {
   }
 };
 
+/* init() carga ambos listados al iniciar la página */
 (async function init() {
   await cargarCursos();
   await cargarMisCursos();

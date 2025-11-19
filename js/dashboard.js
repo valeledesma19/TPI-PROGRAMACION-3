@@ -1,3 +1,7 @@
+/* Valido que el usuario que accede sea ADMIN, utilizando los datos guardados en localStorage.
+Si no está autorizado, redirijo al login.
+Obtengo el contexto del canvas donde renderizar el gráfico.*/
+
 import { apiGet } from "./api.js";
 
 const usuario = JSON.parse(localStorage.getItem("usuario"));
@@ -12,8 +16,10 @@ let chart = null;
 
 (async function cargarDashboard() {
   try {
+    /* Hago una llamada a la API con apiGet para obtener todas las inscripciones */
     const ins = await apiGet("enrollments");
 
+    /*Uso reduce() para generar un resumen por estado: pendiente, aprobado y rechazado.*/
     const resumen = ins.reduce((a, i) => {
       a[i.estado] = (a[i.estado] || 0) + 1;
       return a;
@@ -29,14 +35,15 @@ let chart = null;
     if (!ctx) return;
 
     if (chart) chart.destroy();
-
+    /*Después construyo el gráfico con Chart.js, creando un gráfico de tipo pie
+    y pasando los datos y colores correspondientes. */
     chart = new Chart(ctx, {
       type: "pie",
       data: {
         labels,
         datasets: [{
           data,
-          backgroundColor: ["#f59e0b","#10b981","#ef4444"]
+          backgroundColor: ["#f59e0b", "#10b981", "#ef4444"]
         }]
       },
       options: { responsive: true }

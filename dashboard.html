@@ -1,3 +1,6 @@
+<!-- El objetivo es mostrar un gráfico con los estados
+ de las inscripciones (pendientes, aprobadas o rechazadas). -->
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -21,12 +24,14 @@
       <canvas id="chartEstados" class="grafico"></canvas>
     </section>
   </main>
-
+  
+  <!-- En el footer importo main.js, que carga el menú según el rol del usuario, y dashboard.js, 
+ donde está toda la lógica para obtener datos desde la API y construir el gráfico en tiempo real. -->
   <footer>Proyecto TPI — Programación III</footer>
 
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/dashboard.js"></script>
-  
+
 </body>
 
 </html>
